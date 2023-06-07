@@ -11,13 +11,16 @@ class GameObject(ABC):
         self.position = np.array((0.0, 0.0))
         self.direction = LEFT
 
-    def rotate(self, degree: float) -> None:
-        self.rotation += degree
+    def rotate(
+        self, frame: pygame.Surface, degrees: float
+    ) -> tuple[pygame.Surface, pygame.Rect]:
+        rot_image = pygame.transform.rotate(frame, degrees)
+        rot_rect = rot_image.get_rect(center=frame.get_rect().center)
+        return rot_image, rot_rect
 
     def translate(self, vector: np.array) -> None:
         self.position += vector
 
-    @abstractmethod
     def handle_event(self, event: pygame.event.Event, time_passed: float) -> None:
         ...
 

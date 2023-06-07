@@ -20,6 +20,9 @@ TOP = (0.0, -1.0)
 BOTTOM = (0.0, 1.0)
 NEUTRAL = (0.0, 0.0)
 
+# Environment
+GRAVITY = (0, 300)
+
 # Players
 PLAYER_1 = 0
 PLAYER_2 = 1

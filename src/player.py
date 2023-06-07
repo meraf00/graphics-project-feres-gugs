@@ -2,6 +2,7 @@ import pygame
 
 from gameobject import *
 from game import game_world
+from tor import Tor
 
 
 class State:
@@ -61,6 +62,14 @@ class Player(GameObject):
         self.opponent_screen = opponent_screen
         self.controller = controller
 
+        if self.id == PLAYER_1:
+            self.top_screen = self.player_screen
+            self.bottom_screen = self.opponent_screen
+
+        else:
+            self.bottom_screen = self.player_screen
+            self.top_screen = self.opponent_screen
+
         self.max_speed: float = 550.0
         self.speed: float = 0.0
         self.acceleration: float = 200.0
@@ -90,6 +99,14 @@ class Player(GameObject):
         keys = pygame.key.get_pressed()
 
         self.handle_movement(keys, time_passed)
+
+        if keys[pygame.K_e]:
+            game_world.instantiate(
+                Tor,
+                self.top_screen,
+                self.bottom_screen,
+                initial_position=self.position.tolist(),
+            )
 
     def update_state(self):
         if self.speed == 0:

@@ -6,6 +6,7 @@ from background import Background
 from player import Player
 from player_controller import PlayerController
 from game import game_world
+from tor import Tor
 
 pygame.init()
 
@@ -21,6 +22,8 @@ player_two_controller = PlayerController(player=PLAYER_2)
 game_world.instantiate(Player, top_screen, bottom_screen, player_one_controller)
 game_world.instantiate(Player, bottom_screen, top_screen, player_two_controller)
 
+game_world.instantiate(Tor, top_screen, bottom_screen)
+
 
 player_one = game_world.game_objects[PLAYER_1]
 player_two = game_world.game_objects[PLAYER_2]
@@ -34,6 +37,8 @@ clock = pygame.time.Clock()
 
 
 while True:
+    game_objects = list(game_world.game_objects.values())
+
     time_passed = clock.tick(FPS) / 1000.0
 
     for event in pygame.event.get():
@@ -46,7 +51,7 @@ while True:
                 pygame.quit()
                 quit()
 
-        for game_object in game_world.game_objects.values():
+        for game_object in game_objects:
             game_object.handle_event(event, time_passed)
 
     top_background.draw()
@@ -56,7 +61,7 @@ while True:
     top_rects = []
     bottom_rects = []
 
-    for game_object in list(game_world.game_objects.values()):
+    for game_object in game_objects:
         rects = game_object.draw(time_passed)
 
         # store top rect of player one
