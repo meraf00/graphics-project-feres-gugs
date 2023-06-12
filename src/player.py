@@ -2,32 +2,8 @@ import pygame
 
 from gameobject import *
 from game import game_world
+from stick import *
 from tor import Tor
-
-
-class State:
-    def __init__(
-        self, id: int, frames: list[pygame.Surface], animator: Animator = None
-    ):
-        self.id = id
-        self.animator = animator
-        self.frames = frames
-
-    @property
-    def is_animated(self) -> bool:
-        return self.animator != None
-
-    def get_frame(self) -> pygame.Surface:
-        if self.animator:
-            return self.animator.get_frame()
-
-        return self.frames[0]
-
-    def __eq__(self, other: "State"):
-        return other.id == self.id
-
-    def __hash__(self) -> int:
-        return self.id
 
 
 class PlayerState:
@@ -99,6 +75,14 @@ class Player(GameObject):
         keys = pygame.key.get_pressed()
 
         self.handle_movement(keys, time_passed)
+
+        if keys[self.controller.attack]:
+            game_world.instantiate(
+                Stick,
+                self.top_screen,
+                self.bottom_screen,
+                self,
+            )
 
         if keys[pygame.K_e]:
             game_world.instantiate(
