@@ -79,7 +79,7 @@ class Player(GameObject):
 
     def on_collision(self, game_object, time_passed):
         if isinstance(game_object, Weapon) and game_object.player != self:
-            if self.states.sheild_enabled:
+            if self.states.shield_enabled:
                 self.shield.hitpoint -= game_object.damage_per_second * time_passed
                 if self.shield.hitpoint <= 0:
                     self.sheild = None
