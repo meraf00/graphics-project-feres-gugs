@@ -22,8 +22,6 @@ class Background:
         self.width = screen.get_width()
         self.height = screen.get_height()
 
-        self.clock = pygame.time.Clock()
-
         self.load()
 
     def load(self):
@@ -34,11 +32,11 @@ class Background:
             self.backgrounds.append(image)
             self.positions.append(np.zeros(2))
 
-    def draw(self):
-        time_passed = self.clock.tick(FPS) / 1000.0
+    def draw(self, time_passed):
+        base_speed = self.player.speed / (self.parallex_factor * len(self.backgrounds))
 
         for idx, bg in enumerate(self.backgrounds):
-            speed = self.player.speed * self.parallex_factor * idx
+            speed = base_speed * self.parallex_factor * idx
 
             self.positions[idx] += speed * time_passed * np.array(RIGHT)
 

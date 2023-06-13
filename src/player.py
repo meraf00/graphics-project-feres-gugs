@@ -1,7 +1,10 @@
 import pygame
 
 from gameobject import *
+from player_controller import PlayerController
+from weapons import *
 from game import game_world
+
 from stick import *
 from tor import Tor
 
@@ -10,7 +13,7 @@ class PlayerState:
     # states
     IDLE = 0
     RUNNING = 1
-    HAS_WEAPON = 1 << 1
+    HAS_SPEAR = 1 << 1
     SHIELD_ENABLED = 1 << 2
 
     def __init__(self):
@@ -29,9 +32,23 @@ class PlayerState:
         if self.current_state.is_animated:
             self.current_state.animator.play()
 
+    @property
+    def shield_enabled(self):
+        return self.current_state.id & self.SHIELD_ENABLED
+
+    @property
+    def running(self):
+        return self.current_state.id & self.RUNNING
+
+    @property
+    def has_spear(self):
+        return self.current_state.id & self.HAS_SPEAR
+
 
 class Player(GameObject):
-    def __init__(self, id, player_screen, opponent_screen, controller):
+    def __init__(
+        self, id, player_screen, opponent_screen, controller: PlayerController
+    ):
         super().__init__(id)
 
         self.player_screen = player_screen
@@ -46,12 +63,13 @@ class Player(GameObject):
             self.bottom_screen = self.player_screen
             self.top_screen = self.opponent_screen
 
-        self.max_speed: float = 550.0
+        self.max_speed: float = 950.0
         self.speed: float = 0.0
-        self.acceleration: float = 200.0
-        self.decceleration: float = 100.0
+        self.acceleration: float = 400.0
+        self.decceleration: float = 200.0
 
-        self.health: float = 25000.0
+        self.shield: Shield = None
+        self.spear: Spear = None
 
         self.states = PlayerState()
 
@@ -59,8 +77,16 @@ class Player(GameObject):
 
         self.load()
 
-    def on_collision(self, *args):
-        ...
+    def on_collision(self, game_object, time_passed):
+        if isinstance(game_object, Weapon) and game_object.player != self:
+            if self.states.sheild_enabled:
+                self.shield.hitpoint -= game_object.damage_per_second * time_passed
+                if self.shield.hitpoint <= 0:
+                    self.sheild = None
+
+            else:
+                self.speed -= game_object.damage_per_second * time_passed
+                self.speed = max(self.speed, 0)
 
     def handle_movement(self, time_passed):
         keys = pygame.key.get_pressed()
@@ -90,25 +116,25 @@ class Player(GameObject):
                 self,
             )
 
-        if keys[pygame.K_e]:
-            game_world.instantiate(
-                Tor,
-                self.top_screen,
-                self.bottom_screen,
-                initial_position=self.position.tolist(),
-            )
-
-        if keys[pygame.K_s]:
-            game_world.instantiate(
-                
-            )
+        if keys[self.controller.enable_shield]:
+            if self.shield:
+                self.shield.enable()
 
     def update_state(self, time_passed):
+        state_id = 0
         if self.speed == 0:
-            self.states.switch_to(PlayerState.IDLE)
+            state_id &= ~PlayerState.RUNNING
 
         else:
-            self.states.switch_to(PlayerState.RUNNING)
+            state_id |= PlayerState.RUNNING
+
+        if self.shield and self.shield.is_enabled:
+            state_id |= PlayerState.SHIELD_ENABLED
+
+        else:
+            state_id &= ~PlayerState.SHIELD_ENABLED
+
+        self.states.switch_to(state_id)
 
         self.handle_movement(time_passed)
 
@@ -178,7 +204,7 @@ class Player(GameObject):
         path = "assets/horse/horse-idle-with-spear.png"
         image = pygame.image.load(path).convert_alpha()
 
-        state_id = PlayerState.IDLE | PlayerState.HAS_WEAPON
+        state_id = PlayerState.IDLE | PlayerState.HAS_SPEAR
         state = State(state_id, [image])
 
         self.states.add(state)
@@ -196,9 +222,7 @@ class Player(GameObject):
         path = "assets/horse/horse-idle-with-spear-sheild.png"
         image = pygame.image.load(path).convert_alpha()
 
-        state_id = (
-            PlayerState.IDLE | PlayerState.HAS_WEAPON | PlayerState.SHIELD_ENABLED
-        )
+        state_id = PlayerState.IDLE | PlayerState.HAS_SPEAR | PlayerState.SHIELD_ENABLED
         state = State(state_id, [image])
 
         self.states.add(state)
@@ -267,7 +291,7 @@ class Player(GameObject):
 
         animator = Animator(frames, 20)
 
-        state_id = PlayerState.RUNNING | PlayerState.HAS_WEAPON
+        state_id = PlayerState.RUNNING | PlayerState.HAS_SPEAR
 
         state = State(state_id, frames, animator)
 
@@ -292,7 +316,7 @@ class Player(GameObject):
         animator = Animator(frames, 20)
 
         state_id = (
-            PlayerState.RUNNING | PlayerState.HAS_WEAPON | PlayerState.SHIELD_ENABLED
+            PlayerState.RUNNING | PlayerState.HAS_SPEAR | PlayerState.SHIELD_ENABLED
         )
 
         state = State(state_id, frames, animator)

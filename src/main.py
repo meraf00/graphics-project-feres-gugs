@@ -1,3 +1,4 @@
+import sys
 import pygame
 from pygame.locals import *
 
@@ -21,8 +22,6 @@ player_two_controller = PlayerController(player=PLAYER_2)
 
 game_world.instantiate(Player, top_screen, bottom_screen, player_one_controller)
 game_world.instantiate(Player, bottom_screen, top_screen, player_two_controller)
-
-game_world.instantiate(Tor, top_screen, bottom_screen)
 
 
 player_one = game_world.game_objects[PLAYER_1]
@@ -54,8 +53,8 @@ while True:
         for game_object in game_objects:
             game_object.handle_event(event, time_passed)
 
-    top_background.draw()
-    bottom_background.draw()
+    top_background.draw(time_passed)
+    bottom_background.draw(time_passed)
 
     # for collision detection
     top_rects = []
@@ -87,7 +86,7 @@ while True:
         rect, game_obj = top_rects[i]
 
         if player_1_rect.colliderect(rect):
-            player_one.on_collision(game_obj)
+            player_one.on_collision(game_obj, time_passed)
 
     # handle collision
     # for player 2
@@ -95,6 +94,6 @@ while True:
         rect, game_obj = bottom_rects[i]
 
         if player_2_rect.colliderect(rect):
-            player_two.on_collision(game_obj)
+            player_two.on_collision(game_obj, time_passed)
 
     pygame.display.update()

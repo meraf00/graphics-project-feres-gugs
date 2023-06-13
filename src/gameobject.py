@@ -28,6 +28,12 @@ class GameObject(ABC):
     def draw(self, time_passed: float) -> Optional[pygame.Surface]:
         ...
 
+    def __eq__(self, value: object) -> bool:
+        return self.id == value.id
+
+    def __hash__(self) -> int:
+        return hash(self.id)
+
 
 class Animator:
     def __init__(self, frames: list, framerate: int, loop: bool = True) -> None:
@@ -36,9 +42,15 @@ class Animator:
         self.frame_count = len(frames)
         self.loop = loop
 
+        self.speed = 1
+
         self._start_time = None
         self._last_frame = frames[0]
         self._playing = False
+
+    @property
+    def is_playing(self):
+        return self._playing
 
     def start(self) -> None:
         self._start_time = pygame.time.get_ticks()
@@ -59,7 +71,7 @@ class Animator:
 
     def get_frame(self) -> pygame.Surface:
         if self._playing:
-            time_passed = pygame.time.get_ticks() - self._start_time
+            time_passed = (pygame.time.get_ticks() - self._start_time) * self.speed
             time_passed_seconds = time_passed / 1000.0
 
             frame_idx = int(self.framerate * time_passed_seconds)
@@ -68,7 +80,10 @@ class Animator:
                 frame_idx = frame_idx % self.frame_count
 
             else:
-                frame_idx = max(self.frame_count - 1, frame_idx)
+                if frame_idx > self.frame_count:
+                    self.stop()
+
+                frame_idx = min(self.frame_count - 1, frame_idx)
 
             self._last_frame = self.frames[frame_idx]
 
@@ -101,3 +116,4 @@ class State:
 
     def __hash__(self) -> int:
         return self.id
+
