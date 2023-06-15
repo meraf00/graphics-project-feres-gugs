@@ -1,4 +1,5 @@
 import pygame
+from collectables import ShieldCollectable
 
 from gameobject import *
 from player_controller import PlayerController
@@ -81,12 +82,15 @@ class Player(GameObject):
         if isinstance(game_object, Weapon) and game_object.player != self:
             if self.states.shield_enabled:
                 self.shield.hitpoint -= game_object.damage_per_second * time_passed
-                if self.shield.hitpoint <= 0:
-                    self.sheild = None
 
             else:
                 self.speed -= game_object.damage_per_second * time_passed
                 self.speed = max(self.speed, 0)
+
+        if isinstance(game_object, ShieldCollectable):
+            if self.shield == None:
+                game_world.dispose(game_object)
+                self.shield = Shield()
 
     def handle_movement(self, time_passed):
         keys = pygame.key.get_pressed()
@@ -122,6 +126,7 @@ class Player(GameObject):
 
     def update_state(self, time_passed):
         state_id = 0
+
         if self.speed == 0:
             state_id &= ~PlayerState.RUNNING
 
@@ -132,6 +137,10 @@ class Player(GameObject):
             state_id |= PlayerState.SHIELD_ENABLED
 
         else:
+            state_id &= ~PlayerState.SHIELD_ENABLED
+
+        if self.shield and self.shield.hitpoint <= 0:
+            self.shield = None
             state_id &= ~PlayerState.SHIELD_ENABLED
 
         self.states.switch_to(state_id)

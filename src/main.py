@@ -1,12 +1,14 @@
 import sys
 import pygame
 from pygame.locals import *
+from collectables import ShieldCollectable
 
 from consts import *
 from background import Background
 from player import Player
 from player_controller import PlayerController
 from game import game_world
+from spawner import Spawner
 from tor import Tor
 
 pygame.init()
@@ -30,6 +32,18 @@ player_two = game_world.game_objects[PLAYER_2]
 
 top_background = Background(top_screen, player_one)
 bottom_background = Background(bottom_screen, player_two)
+
+
+collectables = Spawner(
+    {
+        ShieldCollectable: 10,
+    },
+    200.0,
+    (0.0, 150.0),
+    top_screen,
+    bottom_screen,
+)
+collectables.spawn_items()
 
 
 clock = pygame.time.Clock()

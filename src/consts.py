@@ -20,8 +20,11 @@ TOP = (0.0, -1.0)
 BOTTOM = (0.0, 1.0)
 NEUTRAL = (0.0, 0.0)
 
-# Environment
+# Environment settings
 GRAVITY = (0, 300)
+MAX_SPAWNED_SHIELDS = 10
+MAX_SPAWNED_SPEARS = 5
+SPAWN_GAP = 200
 
 # Players
 PLAYER_1 = 0

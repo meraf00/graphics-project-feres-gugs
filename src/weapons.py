@@ -24,12 +24,18 @@ class Shield:
 
     @property
     def is_enabled(self):
-        time_passed = (pygame.time.get_ticks() - self._start_time) * 1000
-        
+        if self._start_time == None:
+            return False
+
+        time_passed = (pygame.time.get_ticks() - self._start_time) / 1000.0
+
         if time_passed > self.enable_duration:
             self._enabled = False
 
         return self._enabled
+
+    def __str__(self) -> str:
+        return str(self.hitpoint)
 
 
 class Spear:
