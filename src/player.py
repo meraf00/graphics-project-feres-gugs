@@ -4,7 +4,7 @@ from collectables import ShieldCollectable
 from gameobject import *
 from player_controller import PlayerController
 from weapons import *
-from game import game_world
+from world import game_world
 
 from stick import *
 from tor import Tor
@@ -88,9 +88,10 @@ class Player(GameObject):
                 self.speed = max(self.speed, 0)
 
         if isinstance(game_object, ShieldCollectable):
-            if self.shield == None:
-                game_world.dispose(game_object)
-                self.shield = Shield()
+            if game_object.id in game_world.game_objects:
+                if self.shield == None:
+                    game_world.dispose(game_object)
+                    self.shield = Shield()
 
     def handle_movement(self, time_passed):
         keys = pygame.key.get_pressed()

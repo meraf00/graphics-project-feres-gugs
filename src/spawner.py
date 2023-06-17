@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-from game import game_world
+from world import game_world
 from gameobject import GameObject
 
 

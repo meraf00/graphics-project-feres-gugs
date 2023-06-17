@@ -11,7 +11,8 @@ class World:
         self.last_id += 1
 
     def dispose(self, game_object):
-        del self.game_objects[game_object.id]
+        if game_object.id in self.game_objects:
+            del self.game_objects[game_object.id]
 
 
 game_world: World = World()

@@ -4,7 +4,7 @@ from gameobject import GameObject
 import pygame
 
 from gameobject import *
-from game import game_world
+from world import game_world
 
 
 class ShieldCollectable(GameObject):

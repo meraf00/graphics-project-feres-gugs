@@ -1,6 +1,6 @@
 import pygame
 
-from game import game_world
+from world import game_world
 from gameobject import *
 from weapons import *
 
