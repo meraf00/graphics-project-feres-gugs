@@ -18,3 +18,10 @@ class PlayerController:
             self.enable_shield = K_k
             self.attack = K_i
             self.throw = K_h
+
+    def disable(self):
+        self.move_left = K_0
+        self.move_right = K_0
+        self.enable_shield = K_0
+        self.attack = K_0
+        self.throw = K_0

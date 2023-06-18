@@ -52,7 +52,40 @@ class Game:
         path = "assets/hud/spear-hud.png"
         self.spear_image = pygame.image.load(path).convert_alpha()
 
+        path = "assets/flag/flag.png"
+        self.flag_image = pygame.image.load(path).convert_alpha()
+        self.flag_image = pygame.transform.scale(self.flag_image, (100, 100))
+
         self.font = pygame.font.SysFont("Corbel", 40, True)
+        self.large_font = pygame.font.SysFont("Corbel", 70, True)
+
+    def draw_winning_screen(self, winner, loser):
+        width = winner.get_width()
+
+        height = winner.get_height()
+
+        cover = pygame.Surface((width, height), pygame.SRCALPHA)
+        cover_rect = cover.get_rect()
+
+        cover.fill(GREEN_ALPHA)
+
+        text = self.large_font.render("Winner!", True, WHITE)
+
+        cover.blit(
+            text,
+            (
+                cover_rect.centerx - text.get_rect().centerx,
+                cover_rect.centery - text.get_rect().centery,
+            ),
+        )
+
+        winner.blit(cover, (0, 0, width, height))
+
+        cover = pygame.Surface((width, height), pygame.SRCALPHA)
+
+        cover.fill(RED_ALPHA)
+
+        loser.blit(cover, (0, 0, width, height))
 
     def mainloop(self):
         game_objects = list(game_world.game_objects.values())
@@ -123,12 +156,24 @@ class Game:
             self.speed_image,
             self.shield_image,
             self.spear_image,
+            self.flag_image,
             self.font,
         )
+
         draw_hud(
             self.player_two,
             self.speed_image,
             self.shield_image,
             self.spear_image,
+            self.flag_image,
             self.font,
         )
+
+        if self.player_one.flags + self.player_two.flags == 3:
+            self.player_one.controller.disable()
+            self.player_two.controller.disable()
+
+            player_one_won = self.player_one.flags > self.player_two.flags
+
+            if player_one_won:
+                self.draw_winning_screen(self.top_screen, self.bottom_screen)

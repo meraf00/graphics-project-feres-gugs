@@ -51,3 +51,11 @@ class Spawner:
 
         for x in spear_positions:
             self.spawn_spear((x, spear_y))
+
+        flag_positions = [(8000, 120), (16_000, 120), (24_000, 120)]
+        # flag_positions = [(500, 120), (1000, 120), (2000, 120)]
+
+        for position in flag_positions:
+            game_world.instantiate(
+                FlagCollectable, self.top_screen, self.bottom_screen, position
+            )

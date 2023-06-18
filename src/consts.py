@@ -13,6 +13,8 @@ YELLOW = (255, 255, 0)
 GRAY = (121, 121, 121)
 BLUE_BLACK_ALPHA = (0, 100, 255, 100)
 BROWN = (66, 60, 46)
+RED_ALPHA = (255, 0, 0, 100)
+GREEN_ALPHA = (0, 255, 0, 100)
 
 # Directions
 LEFT = (1.0, 0.0)

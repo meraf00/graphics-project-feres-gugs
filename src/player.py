@@ -71,6 +71,7 @@ class Player(GameObject):
 
         self.shield: Shield = None
         self.spear: Spear = None
+        self.flags: int = 0
 
         self.states = PlayerState()
 
@@ -80,7 +81,6 @@ class Player(GameObject):
 
     def on_collision(self, game_object, time_passed):
         if isinstance(game_object, Weapon) and game_object.player != self:
-            
             if self.states.shield_enabled:
                 self.shield.hitpoint -= game_object.damage_per_second * time_passed
 
@@ -99,6 +99,11 @@ class Player(GameObject):
                 if self.spear == None:
                     game_world.dispose(game_object)
                     self.spear = Spear()
+
+        if isinstance(game_object, FlagCollectable):
+            if game_object.id in game_world.game_objects:
+                self.flags += 1
+                game_world.dispose(game_object)
 
     def handle_movement(self, time_passed):
         keys = pygame.key.get_pressed()

@@ -4,7 +4,54 @@ from consts import *
 from player import Player
 
 
-def draw_hud(player: Player, speed_image, shield_image, spear_image, font):
+def draw_flags(player, flag_image, font):
+    surface = player.player_screen
+
+    width = surface.get_width()
+
+    height = surface.get_height()
+
+    hud_width = flag_image.get_rect().width * 2
+
+    hud_height = height / 8
+
+    hud_surface = pygame.Surface((hud_width, hud_height), pygame.SRCALPHA)
+
+    hud_rect = hud_surface.get_rect()
+
+    hud_surface.fill(BLUE_BLACK_ALPHA)
+
+    # ========================================================
+    #                           Flag
+    # ========================================================
+    # spear
+
+    flag_image_hud = pygame.transform.scale(flag_image, (hud_height, hud_height))
+
+    hud_surface.blit(
+        flag_image_hud,
+        (
+            hud_rect.centerx - flag_image_hud.get_rect().centerx,
+            hud_rect.centery - flag_image_hud.get_rect().centery,
+        ),
+    )
+
+    text = font.render(str(player.flags), True, WHITE)
+
+    hud_surface.blit(
+        text,
+        (
+            hud_rect.centerx - text.get_rect().centerx,
+            hud_rect.centery - text.get_rect().centery,
+        ),
+    )
+
+    w = width - hud_width * 2
+
+    surface.blit(hud_surface, (w, 0, hud_width, hud_height))
+
+
+def draw_hud(player: Player, speed_image, shield_image, spear_image, flag_image, font):
     surface = player.player_screen
 
     width = surface.get_width()
@@ -127,3 +174,5 @@ def draw_hud(player: Player, speed_image, shield_image, spear_image, font):
     w = width / 2 - hud_width / 2
 
     surface.blit(hud_surface, (w, 0, hud_width, hud_height))
+
+    draw_flags(player, flag_image, font)
