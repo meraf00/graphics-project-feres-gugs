@@ -20,6 +20,8 @@ class Tor(Weapon):
 
         self.acceleration = np.array(GRAVITY)
 
+        self.damage_per_second = 2300.0
+
         self.load()
 
     def draw(self, time_passed):

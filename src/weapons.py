@@ -53,6 +53,9 @@ class Spear:
             self._start_time = pygame.time.get_ticks()
             self.count -= 1
             self._thrown = True
+            return True
+
+        return False
 
     @property
     def is_thrown(self):

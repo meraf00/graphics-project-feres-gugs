@@ -49,6 +49,11 @@ class Game:
         path = "assets/hud/sheild.png"
         self.shield_image = pygame.image.load(path).convert_alpha()
 
+        path = "assets/hud/spear-hud.png"
+        self.spear_image = pygame.image.load(path).convert_alpha()
+
+        self.font = pygame.font.SysFont("Corbel", 40, True)
+
     def mainloop(self):
         game_objects = list(game_world.game_objects.values())
 
@@ -113,5 +118,17 @@ class Game:
             if player_2_rect.colliderect(rect):
                 self.player_two.on_collision(game_obj, time_passed)
 
-        draw_hud(self.player_one, self.speed_image, self.shield_image)
-        draw_hud(self.player_two, self.speed_image, self.shield_image)
+        draw_hud(
+            self.player_one,
+            self.speed_image,
+            self.shield_image,
+            self.spear_image,
+            self.font,
+        )
+        draw_hud(
+            self.player_two,
+            self.speed_image,
+            self.shield_image,
+            self.spear_image,
+            self.font,
+        )

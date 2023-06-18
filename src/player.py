@@ -80,6 +80,7 @@ class Player(GameObject):
 
     def on_collision(self, game_object, time_passed):
         if isinstance(game_object, Weapon) and game_object.player != self:
+            
             if self.states.shield_enabled:
                 self.shield.hitpoint -= game_object.damage_per_second * time_passed
 
@@ -129,14 +130,14 @@ class Player(GameObject):
 
         if keys[self.controller.throw]:
             if self.spear:
-                
-                game_world.instantiate(
-                    Tor,
-                    self.top_screen,
-                    self.bottom_screen,
-                    self,
-                    np.array(self.position),
-                )
+                if not self.spear.is_thrown and self.spear.throw():
+                    game_world.instantiate(
+                        Tor,
+                        self.top_screen,
+                        self.bottom_screen,
+                        self,
+                        np.array(self.position),
+                    )
 
         if keys[self.controller.enable_shield]:
             if self.shield:
@@ -162,6 +163,8 @@ class Player(GameObject):
             state_id &= ~PlayerState.SHIELD_ENABLED
 
         if self.spear:
+            # update thrown state
+            self.spear.is_thrown
             state_id |= PlayerState.HAS_SPEAR
 
         else:

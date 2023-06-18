@@ -4,7 +4,7 @@ from consts import *
 from player import Player
 
 
-def draw_hud(player: Player, speed_image, shield_image):
+def draw_hud(player: Player, speed_image, shield_image, spear_image, font):
     surface = player.player_screen
 
     width = surface.get_width()
@@ -53,6 +53,35 @@ def draw_hud(player: Player, speed_image, shield_image):
             ),
             10,
         )
+
+    # ========================================================
+    #                           Spear
+    # ========================================================
+    # spear
+
+    spear_image_hud = pygame.transform.scale(spear_image, (hud_height, hud_height))
+
+    hud_surface.blit(
+        spear_image_hud,
+        (
+            hud_rect.centerx - spear_image_hud.get_rect().centerx,
+            hud_rect.centery - spear_image_hud.get_rect().centery,
+        ),
+    )
+
+    if player.spear:
+        text = font.render(str(player.spear.count), True, WHITE)
+
+    else:
+        text = font.render(str(0), True, WHITE)
+
+    hud_surface.blit(
+        text,
+        (
+            hud_rect.centerx - text.get_rect().centerx,
+            hud_rect.centery - text.get_rect().centery,
+        ),
+    )
 
     # ========================================================
     #                           Shield

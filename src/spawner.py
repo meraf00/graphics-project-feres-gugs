@@ -30,14 +30,11 @@ class Spawner:
         shield_positions = []
         spear_positions = []
 
-        max_spear_count = 3
-        max_shield_count = 5
-
-        gap = 200
+        gap = 500
 
         last_pos = 0
 
-        for i in range(max_spear_count + max_shield_count):
+        for _ in range(20):
             last_pos = random.randint(last_pos + gap, last_pos + 2 * gap)
 
             if random.uniform(0, 1) > 0.5:
