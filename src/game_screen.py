@@ -9,6 +9,8 @@ from player_controller import PlayerController
 from world import game_world
 from spawner import Spawner
 
+from hud import draw_hud
+
 
 class Game:
     def __init__(self):
@@ -46,6 +48,12 @@ class Game:
 
         self.clock = pygame.time.Clock()
 
+        path = "assets/hud/speed-icon.png"
+        self.speed_image = pygame.image.load(path).convert_alpha()
+
+        path = "assets/hud/sheild.png"
+        self.shield_image = pygame.image.load(path).convert_alpha()
+
     def mainloop(self):
         game_objects = list(game_world.game_objects.values())
 
@@ -60,7 +68,9 @@ class Game:
                 if event.key == K_ESCAPE:
                     from screens import screens
 
+                    game_world.reset()
                     screens.go("home")
+                    return
 
             for game_object in game_objects:
                 game_object.handle_event(event, time_passed)
@@ -107,3 +117,6 @@ class Game:
 
             if player_2_rect.colliderect(rect):
                 self.player_two.on_collision(game_obj, time_passed)
+
+        draw_hud(self.player_one, self.speed_image, self.shield_image)
+        draw_hud(self.player_two, self.speed_image, self.shield_image)

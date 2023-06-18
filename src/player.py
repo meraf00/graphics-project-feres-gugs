@@ -92,6 +92,12 @@ class Player(GameObject):
                 if self.shield == None:
                     game_world.dispose(game_object)
                     self.shield = Shield()
+                    
+        if isinstance(game_object, ShieldCollectable):
+            if game_object.id in game_world.game_objects:
+                if self.shield == None:
+                    game_world.dispose(game_object)
+                    self.shield = Shield()
 
     def handle_movement(self, time_passed):
         keys = pygame.key.get_pressed()

@@ -6,6 +6,7 @@ pygame.init()
 
 from screens import screens
 
+
 os.environ["SDL_VIDEO_CENTERED"] = "0"
 
 while True:

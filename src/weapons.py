@@ -11,7 +11,8 @@ class Weapon(GameObject):
 
 class Shield:
     def __init__(self):
-        self.hitpoint = 10_000
+        self.max_hitpoint = 10_000
+        self.hitpoint = self.max_hitpoint
         self.enable_duration = 1  # second
 
         self._start_time = None
@@ -41,3 +42,4 @@ class Shield:
 class Spear:
     def __init__(self):
         self.count = 3
+        self.damage_per_second = 250.0

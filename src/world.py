@@ -14,5 +14,9 @@ class World:
         if game_object.id in self.game_objects:
             del self.game_objects[game_object.id]
 
+    def reset(self):
+        self.game_objects = {}
+        self.last_id = 0
+
 
 game_world: World = World()

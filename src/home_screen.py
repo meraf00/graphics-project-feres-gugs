@@ -6,7 +6,6 @@ from consts import *
 
 class Home:
     def __init__(self):
-        
         self.screen = pygame.display.set_mode((640, 480), 0, 32)
 
         self.home_image = pygame.image.load("assets/ui/home.png").convert()
@@ -62,7 +61,6 @@ class Home:
                 if hover_on_start:
                     from screens import screens
 
-                    print("...")
                     screens.go("game")
 
                 if hover_on_quit:
