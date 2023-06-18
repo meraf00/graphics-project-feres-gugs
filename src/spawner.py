@@ -4,41 +4,53 @@ import numpy as np
 
 from world import game_world
 from gameobject import GameObject
+from collectables import *
 
 
 class Spawner:
     def __init__(
         self,
-        spawn_items: dict[GameObject, int],
-        spawn_gap,
-        init_pos,
         top_screen,
         bottom_screen,
     ):
-        self.spawn_gap = spawn_gap
-        self.init_pos = np.array(init_pos)
         self.top_screen = top_screen
         self.bottom_screen = bottom_screen
 
-        # { GameObject_class : max count }
-        self.objects = spawn_items
+    def spawn_shield(self, position):
+        game_world.instantiate(
+            ShieldCollectable, self.top_screen, self.bottom_screen, position
+        )
+
+    def spawn_spear(self, position):
+        game_world.instantiate(
+            SpearCollectable, self.top_screen, self.bottom_screen, position
+        )
 
     def spawn_items(self):
-        last_spawn_position = self.init_pos
+        shield_positions = []
+        spear_positions = []
 
-        for game_object_class, count in self.objects.items():
-            for _ in range(count):
-                last_x = last_spawn_position[0]
+        max_spear_count = 3
+        max_shield_count = 5
 
-                position = last_spawn_position + (
-                    random.randint(
-                        last_x + self.spawn_gap, last_x + self.spawn_gap + 100
-                    ),
-                    0,
-                )
+        gap = 200
 
-                game_world.instantiate(
-                    game_object_class, self.top_screen, self.bottom_screen, position
-                )
+        last_pos = 0
 
-                last_spawn_position = np.array(position)
+        for i in range(max_spear_count + max_shield_count):
+            last_pos = random.randint(last_pos + gap, last_pos + 2 * gap)
+
+            if random.uniform(0, 1) > 0.5:
+                spear_positions.append(last_pos)
+
+            else:
+                shield_positions.append(last_pos)
+
+        spear_y = 100.0
+        shield_y = 150.0
+
+        for x in shield_positions:
+            self.spawn_shield((x, shield_y))
+
+        for x in spear_positions:
+            self.spawn_spear((x, spear_y))

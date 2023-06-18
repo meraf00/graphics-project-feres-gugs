@@ -43,3 +43,25 @@ class Spear:
     def __init__(self):
         self.count = 3
         self.damage_per_second = 250.0
+        self.cool_down_duration = 1  # seconds
+
+        self._start_time = None
+        self._thrown = False
+
+    def throw(self):
+        if not self._thrown:
+            self._start_time = pygame.time.get_ticks()
+            self.count -= 1
+            self._thrown = True
+
+    @property
+    def is_thrown(self):
+        if self._start_time == None:
+            return False
+
+        time_passed = (pygame.time.get_ticks() - self._start_time) / 1000.0
+
+        if time_passed > self.cool_down_duration:
+            self._thrown = False
+
+        return self._thrown

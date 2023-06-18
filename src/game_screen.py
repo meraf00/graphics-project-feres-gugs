@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from collectables import ShieldCollectable
+from collectables import *
 
 from consts import *
 from background import Background
@@ -36,11 +36,6 @@ class Game:
         self.bottom_background = Background(self.bottom_screen, self.player_two)
 
         collectables = Spawner(
-            {
-                ShieldCollectable: 10,
-            },
-            200.0,
-            (0.0, 150.0),
             self.top_screen,
             self.bottom_screen,
         )

@@ -85,7 +85,5 @@ class SpearCollectable(GameObject):
 
         self.frame = pygame.image.load(path).convert_alpha()
 
-        self.frame = pygame.transform.scale(self.frame, (200, 400))
-
         self.height = self.frame.get_height()
         self.width = self.frame.get_width()

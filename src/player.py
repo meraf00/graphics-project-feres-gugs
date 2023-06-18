@@ -1,5 +1,5 @@
 import pygame
-from collectables import ShieldCollectable
+from collectables import *
 
 from gameobject import *
 from player_controller import PlayerController
@@ -92,12 +92,12 @@ class Player(GameObject):
                 if self.shield == None:
                     game_world.dispose(game_object)
                     self.shield = Shield()
-                    
-        if isinstance(game_object, ShieldCollectable):
+
+        if isinstance(game_object, SpearCollectable):
             if game_object.id in game_world.game_objects:
-                if self.shield == None:
+                if self.spear == None:
                     game_world.dispose(game_object)
-                    self.shield = Shield()
+                    self.spear = Spear()
 
     def handle_movement(self, time_passed):
         keys = pygame.key.get_pressed()
@@ -127,6 +127,17 @@ class Player(GameObject):
                 self,
             )
 
+        if keys[self.controller.throw]:
+            if self.spear:
+                
+                game_world.instantiate(
+                    Tor,
+                    self.top_screen,
+                    self.bottom_screen,
+                    self,
+                    np.array(self.position),
+                )
+
         if keys[self.controller.enable_shield]:
             if self.shield:
                 self.shield.enable()
@@ -149,6 +160,16 @@ class Player(GameObject):
         if self.shield and self.shield.hitpoint <= 0:
             self.shield = None
             state_id &= ~PlayerState.SHIELD_ENABLED
+
+        if self.spear:
+            state_id |= PlayerState.HAS_SPEAR
+
+        else:
+            state_id &= ~PlayerState.HAS_SPEAR
+
+        if self.spear and self.spear.count <= 0:
+            self.spear = None
+            state_id &= ~PlayerState.HAS_SPEAR
 
         self.states.switch_to(state_id)
 

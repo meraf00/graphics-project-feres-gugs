@@ -1,21 +1,22 @@
 import pygame
 
-from gameobject import *
+import numpy as np
+from consts import *
+from weapons import Weapon
 from world import game_world
 
 
-class Tor(GameObject):
-    def __init__(self, id, top_screen, bottom_screen, initial_position: list = None):
-        super().__init__(id)
+class Tor(Weapon):
+    def __init__(self, id, top_screen, bottom_screen, player, initial_position):
+        super().__init__(id, player)
 
-        if initial_position:
-            self.position = np.array(initial_position)
+        self.position = np.array(initial_position)
 
         self.top_screen = top_screen
 
         self.bottom_screen = bottom_screen
 
-        self.speed = np.array((750.0, -100.0))
+        self.speed = np.array((2050.0, -100.0))
 
         self.acceleration = np.array(GRAVITY)
 

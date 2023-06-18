@@ -10,9 +10,11 @@ class PlayerController:
             self.move_right = K_d
             self.enable_shield = K_s
             self.attack = K_w
+            self.throw = K_f
 
         else:
             self.move_left = K_j
             self.move_right = K_l
             self.enable_shield = K_k
             self.attack = K_i
+            self.throw = K_h
