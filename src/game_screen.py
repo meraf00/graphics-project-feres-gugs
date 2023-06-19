@@ -177,3 +177,6 @@ class Game:
 
             if player_one_won:
                 self.draw_winning_screen(self.top_screen, self.bottom_screen)
+
+            else:
+                self.draw_winning_screen(self.bottom_screen, self.top_screen)

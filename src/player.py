@@ -9,6 +9,9 @@ from world import game_world
 from stick import *
 from tor import Tor
 
+from pygame import mixer
+from sounds import Sounds
+
 
 class PlayerState:
     # states
@@ -152,10 +155,17 @@ class Player(GameObject):
         state_id = 0
 
         if self.speed == 0:
+            if self.states.current_state.id & PlayerState.RUNNING:
+                mixer.Channel(self.id).stop()
+
             state_id &= ~PlayerState.RUNNING
 
         else:
             state_id |= PlayerState.RUNNING
+
+            if not (self.states.current_state.id & PlayerState.RUNNING):
+                mixer.Channel(self.id).play(Sounds.horse, -1)
+                Sounds.horse_playing = True
 
         if self.shield and self.shield.is_enabled:
             state_id |= PlayerState.SHIELD_ENABLED
