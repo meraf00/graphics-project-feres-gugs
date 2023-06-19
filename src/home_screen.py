@@ -7,6 +7,7 @@ from consts import *
 class Home:
     def __init__(self):
         self.screen = pygame.display.set_mode((640, 480), 0, 32)
+        pygame.display.set_caption("Feres Gugs!")
 
         self.home_image = pygame.image.load("assets/ui/home.png").convert()
 
